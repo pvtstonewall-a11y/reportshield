@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ReportShield | AI-Powered Law Enforcement Report Writing</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@300;400;500;600&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+--bg-primary: #0a0c10;
+--bg-secondary: #0f1318;
+--bg-tertiary: #151b24;
+--border-color: #1e2d3d;
+--accent-cyan: #00c2ff;
+--accent-gold: #f0a500;
+--accent-green: #00e5a0;
+--accent-red: #ff4757;
+--text-primary: #ffffff;
+--text-secondary: #8b9bb4;
+--text-faint: #4a5a6d;
+}
+
+* {
+margin: 0;
+padding: 0;
+box-sizing: border-box;
+}
+
+body {
+font-family: 'IBM Plex Sans', sans-serif;
+background-color: var(--bg-primary);
+color: var(--text-primary);
+line-height: 1.6;
+overflow-x: hidden;
+}
+
+/* Scanline Overlay Effect */
+body::before {
+content: '';
+position: fixed;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+background: repeating-linear-gradient(
+0deg,
+rgba(0, 0, 0, 0.1),
+rgba(0, 0, 0, 0.1) 1px,
+transparent 1px,
+transparent 2px
+);
+pointer-events: none;
+z-index: 9999;
+opacity: 0.3;
+}
+
+/* Typography */
+h1, h2, h3, h4, h5, h6 {
+font-family: 'Rajdhani', sans-serif;
+font-weight: 700;
+text-transform: uppercase;
+letter-spacing: 0.02em;
+}
+
+.mono {
+font-family: 'IBM Plex Mono', monospace;
+text-transform: uppercase;
+letter-spacing: 0.1em;
+}
+
+/* Logo */
+.logo {
+display: flex;
+align-items: center;
+gap: 12px;
+}
+
+.logo-icon {
+width: 40px;
+height: 40px;
+}
+
+.logo-text {
+font-family: 'Rajdhani', sans-serif;
+font-weight: 700;
+font-size: 1.5rem;
+letter-spacing: 0.1em;
+}
+
+.logo-text span {
+color: var(--accent-cyan);
+}
+
+/* Badges */
+.badge {
+font-family: 'IBM Plex Mono', monospace;
+font-size: 10px;
+font-weight: 500;
+text-transform: uppercase;
+letter-spacing: 0.1em;
+padding: 4px 10px;
+border-radius: 2px;
+display: inline-flex;
+align-items: center;
+gap: 6px;
+}
+
+.badge-cyan {
+background: rgba(0, 194, 255, 0.1);
+border: 1px solid rgba(0, 194, 255, 0.3);
+color: var(--accent-cyan);
+}
+
+.badge-green {
+background: rgba(0, 229, 160, 0.1);
+border: 1px solid rgba(0, 229, 160, 0.3);
+color: var(--accent-green);
+}
+
+.badge-row {
+display: flex;
+gap: 12px;
+flex-wrap: wrap;
+justify-content: center;
+}
+
+/* Buttons */
+.btn {
+font-family: 'Rajdhani', sans-serif;
+font-weight: 700;
+font-size: 14px;
+text-transform: uppercase;
+letter-spacing: 0.1em;
+padding: 14px 28px;
+border: none;
+cursor: pointer;
+transition: all 0.3s ease;
+text-decoration: none;
+display: inline-flex;
+align-items: center;
+justify-content: center;
+gap: 8px;
+position: relative;
+overflow: hidden;
+}
+
+.btn-primary {
+background: linear-gradient(135deg, var(--accent-cyan), #0088cc);
+color: var(--bg-primary);
+border: 1px solid var(--accent-cyan);
+}
+
+.btn-primary::before {
+content: '';
+position: absolute;
+top: 0;
+left: -100%;
+width: 100%;
+height: 100%;
+background: linear-gradient(
+90deg,
+transparent,
+rgba(255, 255, 255, 0.3),
+transparent
+);
+animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+0% { left: -100%; }
+100% { left: 100%; }
+}
+
+.btn-primary:hover {
+box-shadow: 0 0 20px rgba(0, 194, 255, 0.4);
+transform: translateY(-2px);
+}
+
+.btn-ghost {
+background: transparent;
+color: var(--accent-cyan);
+border: 1px solid var(--border-color);
+}
+
+.btn-ghost:hover {
+border-color: var(--accent-cyan);
+box-shadow: 0 0 15px rgba(0, 194, 255, 0.2);
+}
+
+/* Hero Section */
+.hero {
+min-height: 100vh;
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: center;
+padding: 40px 20px;
+position: relative;
+background: radial-gradient(ellipse at center, rgba(0, 194, 255, 0.05) 0%, transparent 70%);
+}
+
+.hero-content {
+max-width: 900px;
+text-align: center;
+z-index: 1;
+}
+
+.hero-logo {
+margin-bottom: 30px;
+justify-content: center;
+}
+
+.hero-logo .logo-icon {
+width: 60px;
+height: 60px;
+}
+
+.hero-logo .logo-text {
+font-size: 2.5rem;
+}
+
+.hero-badges {
+margin-bottom: 40px;
+}
+
+.hero h1 {
+font-size: clamp(2.5rem, 6vw, 4.5rem);
+margin-bottom: 20px;
+line-height: 1.1;
+background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent-cyan) 100%);
+-webkit-background-clip: text;
+-webkit-text-fill-color: transparent;
+background-clip: text;
+}
+
+.hero p {
+font-size: 1.125rem;
+color: var(--text-secondary);
+max-width: 700px;
+margin: 0 auto 40px;
+font-weight: 300;
+line-height: 1.8;
+}
+
+.hero-ctas {
+display: flex;
+gap: 20px;
+justify-content: center;
+flex-wrap: wrap;
+}
+
+/* Section Divider */
+.section-label {
+font-family: 'IBM Plex Mono', monospace;
+font-size: 12px;
+color: var(--accent-cyan);
+letter-spacing: 0.2em;
+margin-bottom: 20px;
+display: flex;
+align-items: center;
+gap: 15px;
+}
+
+.section-label::after {
+content: '';
+flex: 1;
+height: 1px;
+background: var(--border-color);
+max-width: 200px;
+}
+
+/* Features Section */
+.features {
+padding: 100px 20px;
+background-color: var(--bg-secondary);
+}
+
+.features-container {
+max-width: 1200px;
+margin: 0 auto;
+}
+
+.features-grid {
+display: grid;
+grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+gap: 25px;
+margin-top: 40px;
+}
+
+.feature-card {
+background: var(--bg-secondary);
+border: 1px solid var(--border-color);
+padding: 30px;
+position: relative;
+transition: all 0.3s ease;
+}
+
+.feature-card::before {
+content: '';
+position: absolute;
+top: 0;
+left: 0;
+width: 100%;
+height: 2px;
+background: transparent;
+transition: all 0.3s ease;
+}
+
+.feature-card:hover {
+border-color: rgba(0, 194, 255, 0.3);
+transform: translateY(-5px);
+}
+
+.feature-card:hover::before {
+background: var(--accent-cyan);
+box-shadow: 0 0 10px var(--accent-cyan);
+}
+
+.feature-icon {
+width: 48px;
+height: 48px;
+margin-bottom: 20px;
+color: var(--accent-cyan);
+}
+
+.feature-card h3 {
+font-size: 1.25rem;
+margin-bottom: 12px;
+color: var(--text-primary);
+}
+
+.feature-card p {
+color: var(--text-secondary);
+font-size: 0.95rem;
+line-height: 1.7;
+}
+
+/* Platform Strength Bar */
+.strength-bar {
+margin-top: 60px;
+background: var(--bg-tertiary);
+border: 1px solid var(--border-color);
+padding: 30px;
+}
+
+.strength-header {
+font-family: 'IBM Plex Mono', monospace;
+font-size: 11px;
+color: var(--text-faint);
+margin-bottom: 20px;
+letter-spacing: 0.1em;
+}
+
+.strength-item {
+display: flex;
+align-items: center;
+margin-bottom: 15px;
+}
+
+.strength-label {
+width: 150px;
+font-family: 'Rajdhani', sans-serif;
+font-weight: 600;
+font-size: 14px;
+color: var(--text-secondary);
+}
+
+.strength-pips {
+display: flex;
+gap: 6px;
+flex: 1;
+}
+
+.pip {
+width: 12px;
+height: 12px;
+border-radius: 2px;
+background: var(--border-color);
+}
+
+.pip.filled {
+background: var(--accent-green);
+box-shadow: 0 0 8px rgba(0, 229, 160, 0.4);
+}
+
+/* Contact Section */
+.contact {
+padding: 100px 20px;
+background-color: var(--bg-primary);
+}
+
+.contact-container {
+max-width: 600px;
+margin: 0 auto;
+}
+
+.contact-card {
+background: var(--bg-secondary);
+border: 1px solid var(--border-color);
+padding: 50px;
+}
+
+.contact h2 {
+font-size: 2rem;
+margin-bottom: 15px;
+}
+
+.contact > .contact-container > p {
+color: var(--text-secondary);
+margin-bottom: 40px;
+font-weight: 300;
+}
+
+.form-group {
+margin-bottom: 25px;
+}
+
+.form-group label {
+display: block;
+font-family: 'IBM Plex Mono', monospace;
+font-size: 11px;
+color: var(--text-faint);
+margin-bottom: 8px;
+text-transform: uppercase;
+letter-spacing: 0.1em;
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select {
+width: 100%;
+background: var(--bg-tertiary);
+border: 1px solid var(--border-color);
+padding: 14px 16px;
+color: var(--text-primary);
+font-family: 'IBM Plex Sans', sans-serif;
+font-size: 15px;
+transition: all 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+outline: none;
+border-color: var(--accent-cyan);
+box-shadow: 0 0 15px rgba(0, 194, 255, 0.2);
+}
+
+.form-group textarea {
+min-height: 120px;
+resize: vertical;
+}
+
+.form-row {
+display: grid;
+grid-template-columns: 1fr 1fr;
+gap: 20px;
+}
+
+.submit-btn {
+width: 100%;
+margin-top: 10px;
+}
+
+.disclosure-bar {
+margin-top: 30px;
+padding: 15px;
+background: rgba(240, 165, 0, 0.1);
+border: 1px solid rgba(240, 165, 0, 0.3);
+border-left: 3px solid var(--accent-gold);
+font-family: 'IBM Plex Mono', monospace;
+font-size: 11px;
+color: var(--accent-gold);
+line-height: 1.6;
+}
+
+/* Footer */
+.footer {
+padding: 60px 20px;
+background: var(--bg-primary);
+border-top: 1px solid var(--border-color);
+text-align: center;
+}
+
+.footer-logo {
+justify-content: center;
+margin-bottom: 20px;
+}
+
+.footer-tagline {
+font-family: 'IBM Plex Mono', monospace;
+font-size: 12px;
+color: var(--text-faint);
+margin-bottom: 15px;
+letter-spacing: 0.05em;
+}
+
+.footer-copyright {
+font-family: 'IBM Plex Mono', monospace;
+font-size: 11px;
+color: var(--text-faint);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+.features-grid {
+grid-template-columns: 1fr;
+}
+
+.form-row {
+grid-template-columns: 1fr;
+}
+
+.strength-label {
+width: 120px;
+font-size: 12px;
+}
+
+.contact-card {
+padding: 30px;
+}
+
+.hero-ctas {
+flex-direction: column;
+align-items: center;
+}
+
+.btn {
+width: 100%;
+max-width: 300px;
+}
+}
+
+/* Smooth Scroll */
+html {
+scroll-behavior: smooth;
+}
+</style>
+</head>
+<body>
+
+<!-- Hero Section -->
+<section class="hero" id="hero">
+<div class="hero-content">
+<div class="logo hero-logo">
+<svg class="logo-icon" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+<!-- Outer Shield -->
+<path d="M20 2L4 10V18C4 28 11 36.5 20 38C29 36.5 36 28 36 18V10L20 2Z"
+stroke="#00c2ff" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<!-- Inner Shield -->
+<path d="M20 8L10 13V19C10 26 14 31 20 32C26 31 30 26 30 19V13L20 8Z"
+stroke="#00c2ff" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
+<!-- Checkmark -->
+<path d="M14 20L18 24L26 16" stroke="#00c2ff" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+<div class="logo-text">REPORT<span>SHIELD</span></div>
+</div>
+
+<div class="badge-row hero-badges">
+<span class="badge badge-cyan">AI-Powered</span>
+<span class="badge badge-green">Audit Trail On</span>
+<span class="badge badge-cyan">Built for Law Enforcement</span>
+</div>
+
+<h1>Your Reports. Your Words. AI-Assisted.</h1>
+
+<p>ReportShield is a purpose-built AI report writing platform that helps officers produce professional, court-ready narratives faster — while keeping the officer in full control of every word.</p>
+
+<div class="hero-ctas">
+<a href="#contact" class="btn btn-primary">Request Access for Your Department</a>
+<a href="#features" class="btn btn-ghost">See How It Works</a>
+</div>
+</div>
+</section>
+
+<!-- Features Section -->
+<section class="features" id="features">
+<div class="features-container">
+<div class="section-label">How It Works</div>
+
+<div class="features-grid">
+<div class="feature-card">
+<svg class="feature-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5">
+<rect x="8" y="6" width="32" height="36" rx="2"/>
+<line x1="14" y1="14" x2="34" y2="14"/>
+<line x1="14" y1="22" x2="34" y2="22"/>
+<line x1="14" y1="30" x2="28" y2="30"/>
+</svg>
+<h3>5 Report Types Supported</h3>
+<p>Incident, Arrest, Use of Force, Traffic Accident, and Supplemental reports. Each type loads type-specific fields and smart checklists automatically.</p>
+</div>
+
+<div class="feature-card">
+<svg class="feature-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5">
+<path d="M24 4L4 14v20l20 10 20-10V14L24 4z"/>
+<path d="M4 14l20 10 20-10"/>
+<path d="M24 44V24"/>
+</svg>
+<h3>Guided + Free-Form Input</h3>
+<p>Officers can use the structured form mode for step-by-step guided entry, or switch to free-form mode to paste or dictate raw notes — ReportShield structures it either way.</p>
+</div>
+
+<div class="feature-card">
+<svg class="feature-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5">
+<path d="M12 24l8 8 16-16"/>
+<circle cx="24" cy="24" r="20"/>
+</svg>
+<h3>Smart Checklist System</h3>
+<p>Per-report-type dynamic prompt chips remind officers of critical details before generating: Miranda read? Body cam activated? Evidence collected? Answered items are marked with a green checkmark.</p>
+</div>
+
+<div class="feature-card">
+<svg class="feature-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5">
+<path d="M24 4v8"/>
+<path d="M24 36v8"/>
+<path d="M4 24h8"/>
+<path d="M36 24h8"/>
+<circle cx="24" cy="24" r="12"/>
+<path d="M24 18v12l8-6"/>
+</svg>
+<h3>AI Narrative Generation</h3>
+<p>Powered by Anthropic's Claude AI. Produces a professional, third-person, past-tense law enforcement narrative using only the facts the officer provides. No speculation. No fabrication. Court-ready output.</p>
+</div>
+
+<div class="feature-card">
+<svg class="feature-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5">
+<path d="M14 6h20v36H14z"/>
+<path d="M20 12h8"/>
+<path d="M18 20h12"/>
+<path d="M18 26h12"/>
+<path d="M18 32h8"/>
+<circle cx="34" cy="12" r="3" fill="currentColor"/>
+</svg>
+<h3>Built-In Audit Trail</h3>
+<p>Every action is timestamped and logged: session start, generation events, officer edits, copy actions, and final submission. Full chain-of-custody for the report writing process.</p>
+</div>
+
+<div class="feature-card">
+<svg class="feature-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5">
+<path d="M24 4L6 12v12c0 12 8 20 18 22 10-2 18-10 18-22V12L24 4z"/>
+<path d="M16 24l6 6 12-12"/>
+</svg>
+<h3>Officer Verification Checkpoint</h3>
+<p>Before submission, officers must check off five mandatory review items confirming accuracy, factual integrity, and personal accountability. The submit button only activates when all boxes are cleared.</p>
+</div>
+
+<div class="feature-card">
+<svg class="feature-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5">
+<rect x="6" y="6" width="36" height="36" rx="2"/>
+<path d="M6 16h36"/>
+<path d="M16 28l8 8 12-12"/>
+</svg>
+<h3>AI Disclosure Notice</h3>
+<p>Every generated narrative is accompanied by a mandatory disclosure banner: the AI's role is transparent, and the officer's review and certification is required before submission.</p>
+</div>
+
+<div class="feature-card">
+<svg class="feature-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5">
+<rect x="8" y="12" width="32" height="24" rx="2"/>
+<path d="M8 20h32"/>
+<path d="M20 36v4"/>
+<path d="M28 36v4"/>
+<path d="M16 40h16"/>
+</svg>
+<h3>Hardware-Agnostic</h3>
+<p>Runs in any modern browser. No app install, no proprietary hardware, no vendor lock-in. Works on department computers, MDTs, and personal devices.</p>
+</div>
+</div>
+
+<!-- Platform Strength Comparison -->
+<div class="strength-bar">
+<div class="strength-header">ReportShield vs. Competition</div>
+
+<div class="strength-item">
+<div class="strength-label">Transparency</div>
+<div class="strength-pips">
+<div class="pip filled"></div>
+<div class="pip filled"></div>
+<div class="pip filled"></div>
+<div class="pip filled"></div>
+<div class="pip filled"></div>
+</div>
+</div>
+
+<div class="strength-item">
+<div class="strength-label">Audit Trail</div>
+<div class="strength-pips">
+<div class="pip filled"></div>
+<div class="pip filled"></div>
+<div class="pip filled"></div>
+<div class="pip filled"></div>
+<div class="pip filled"></div>
+</div>
+</div>
+
+<div class="strength-item">
+<div class="strength-label">HW-Agnostic</div>
+<div class="strength-pips">
+<div class="pip filled"></div>
+<div class="pip filled"></div>
+<div class="pip filled"></div>
+<div class="pip filled"></div>
+<div class="pip filled"></div>
+</div>
+</div>
+
+<div class="strength-item">
+<div class="strength-label">Input Flexibility</div>
+<div class="strength-pips">
+<div class="pip filled"></div>
+<div class="pip filled"></div>
+<div class="pip filled"></div>
+<div class="pip filled"></div>
+<div class="pip filled"></div>
+</div>
+</div>
+
+<div class="strength-item">
+<div class="strength-label">Officer Control</div>
+<div class="strength-pips">
+<div class="pip filled"></div>
+<div class="pip filled"></div>
+<div class="pip filled"></div>
+<div class="pip filled"></div>
+<div class="pip filled"></div>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+<!-- Contact Section -->
+<section class="contact" id="contact">
+<div class="contact-container">
+<div class="contact-card">
+<div class="section-label">Request Department Access</div>
+
+<h2>Bring ReportShield to Your Department</h2>
+
+<p>ReportShield is currently available for Mississippi law enforcement departments. Request access to get your unit set up with AI-assisted report writing — no contracts, no hardware requirements.</p>
+
+<form id="accessForm">
+<div class="form-group">
+<label>Department / Agency Name</label>
+<input type="text" required placeholder="e.g., Jackson Police Department">
+</div>
+
+<div class="form-row">
+<div class="form-group">
+<label>Your Name & Rank</label>
+<input type="text" required placeholder="e.g., Sgt. John Miller">
+</div>
+<div class="form-group">
+<label>Email Address</label>
+<input type="email" required placeholder="name@department.gov">
+</div>
+</div>
+
+<div class="form-row">
+<div class="form-group">
+<label>County / City</label>
+<input type="text" required placeholder="e.g., Hinds County">
+</div>
+<div class="form-group">
+<label>Approximate Number of Officers</label>
+<select required>
+<option value="">Select range...</option>
+<option value="1-10">1-10</option>
+<option value="11-25">11-25</option>
+<option value="26-50">26-50</option>
+<option value="51-100">51-100</option>
+<option value="101-250">101-250</option>
+<option value="250+">250+</option>
+</select>
+</div>
+</div>
+
+<div class="form-group">
+<label>Tell us about your current report writing process</label>
+<textarea placeholder="What challenges does your department face with report writing? What systems are you currently using?"></textarea>
+</div>
+
+<button type="submit" class="btn btn-primary submit-btn">Submit Request</button>
+</form>
+
+<div class="disclosure-bar">
+ReportShield is an officer-built platform. All AI output requires officer review and certification before submission.
+</div>
+</div>
+</div>
+</section>
+
+<!-- Footer -->
+<footer class="footer">
+<div class="logo footer-logo">
+<svg class="logo-icon" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M20 2L4 10V18C4 28 11 36.5 20 38C29 36.5 36 28 36 18V10L20 2Z"
+stroke="#00c2ff" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M20 8L10 13V19C10 26 14 31 20 32C26 31 30 26 30 19V13L20 8Z"
+stroke="#00c2ff" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
+<path d="M14 20L18 24L26 16" stroke="#00c2ff" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+<div class="logo-text">REPORT<span>SHIELD</span></div>
+</div>
+
+<div class="footer-tagline">Built by law enforcement, for law enforcement.</div>
+<div class="footer-copyright">© 2026 ReportShield. All rights reserved.</div>
+</footer>
+
+<script>
+// Form submission handler
+document.getElementById('accessForm').addEventListener('submit', function(e) {
+e.preventDefault();
+alert("Request submitted! We'll be in touch.");
+this.reset();
+});
+
+// Smooth scroll for anchor links
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+anchor.addEventListener('click', function (e) {
+e.preventDefault();
+const target = document.querySelector(this.getAttribute('href'));
+if (target) {
+target.scrollIntoView({
+behavior: 'smooth',
+block: 'start'
+});
+}
+});
+});
+</script>
+
+</body>
+</html>
+
